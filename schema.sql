@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS metrics
 (
-  id INTEGER (8) PRIMARY KEY AUTOINCREMENT,
-  insert_ts INTEGER (8),
-  sensor_id TEXT (255),
-  metric TEXT (MAX),
-  ts REAL,
-  ts_iso8601 TEXT (MAX),
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  insert_ts INTEGER NOT NULL,
+  sensor_id TEXT NOT NULL,
+  metric TEXT NOT NULL,
+  ts REAL NOT NULL,
+  ts_iso8601 TEXT NOT NULL,
   value REAL
 );

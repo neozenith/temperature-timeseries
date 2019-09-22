@@ -1,4 +1,5 @@
 import os, sys
+import sqlite3
 import datetime
 import time
 import logging
@@ -12,29 +13,43 @@ logging.basicConfig(filename="output.log", level=logging.INFO)
 
 
 def main():
-
     log.info("Starting up...")
-    with open("humidity.csv", "a+") as f:
-        if os.stat("humidity.csv").st_size == 0:
-            f.write("Datetime,Temperature,Humidity\r\n")
-
-        while True:
-            log.info("read...")
-            measure_wait(f, delay=5)
-            f.flush()
+    db = setup_database("data.db")
+    while True:
+        log.info("read...")
+        measure_wait(db, delay=5)
 
 
-def measure_wait(f, delay=2):
+def setup_database(filepath):
+    conn = sqlite3.connect(filepath)
+    with open("schema.sql", "r") as s:
+        schema = s.read()
+    conn.execute(schema)
+    conn.commit()
+    return conn
+
+
+def measure_wait(db, delay=2):
     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
     if humidity is not None and temperature is not None:
-        now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+        now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         log.info(f"{now} {temperature}, {humidity}")
-        f.write("{0},{1:0.1f},{2:0.1f}\r\n".format(now, temperature, humidity))
+        persist_metric(f, now, "temperature", temperature)
+        persist_metric(f, now, "humidity", humidity)
     else:
         log.warn("Failed to retrieve data from humidity sensor")
 
     time.sleep(delay)
+
+
+def persist_metric(db, now, metric, value):
+    now_iso = now.isoformat()
+    now_ts = now.timestamp()
+    db.execute(f'''
+    INSERT INTO metrics () VALUES;
+               ''')
+    db.commit()
 
 
 if __name__ == "__main__":
