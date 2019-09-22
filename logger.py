@@ -5,6 +5,7 @@ import time
 import logging
 import Adafruit_DHT
 
+SENSOR_ID = "RPI4-DHT22"
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
 
@@ -35,8 +36,8 @@ def measure_wait(db, delay=2):
     if humidity is not None and temperature is not None:
         now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
         log.info(f"{now} {temperature}, {humidity}")
-        persist_metric(f, now, "temperature", temperature)
-        persist_metric(f, now, "humidity", humidity)
+        persist_metric(db, now, "temperature", temperature)
+        persist_metric(db, now, "humidity", humidity)
     else:
         log.warn("Failed to retrieve data from humidity sensor")
 
@@ -46,9 +47,15 @@ def measure_wait(db, delay=2):
 def persist_metric(db, now, metric, value):
     now_iso = now.isoformat()
     now_ts = now.timestamp()
-    db.execute(f'''
-    INSERT INTO metrics () VALUES;
-               ''')
+    db.execute(
+        f"""
+    INSERT INTO metrics
+        (sensor_id, insert_ts, ts, ts_iso8601, metric, value)
+    VALUES
+        (?, ?, ?, ?, ?, ?)
+    """,
+        (SENSOR_ID, now_ts, now_ts, now_iso, metric, value),
+    )
     db.commit()
 
 
