@@ -15,3 +15,11 @@ each of the libraries below?
 
  - https://tslearn.readthedocs.io/en/latest/
  - https://facebook.github.io/prophet/docs/quick_start.html
+
+# TODO
+ - Explore analysis tools
+ - Use Plotly to generate visuals
+ - Use plotly to create live dashboards
+ - Centralise data by pushing to the cloud.
+ - Handle caching offline and forwarding once delivered.
+ - Setup Heroku instance to visualise from cloud.
