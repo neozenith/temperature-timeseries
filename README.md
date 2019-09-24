@@ -5,11 +5,7 @@
 https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/
 
 ```bash
-python3 -m venv .venv
-. ./venv/bin/activate
-pip install -r .deps/requirements-dev.txt
-python3 logger.py &
-python3 server.py &
+. ./start.sh
 ```
 
 # Data
