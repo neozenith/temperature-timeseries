@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask import current_app, g
+from flask import jsonify
 import sqlite3
 import logging
 
@@ -25,17 +26,19 @@ def close_db(e=None):
 
 @app.route("/")
 def index():
-    output = "<html><body>"
-    for stat in stats():
-        for s in stat:
-            output += f"<div>{s}</div>"
-    output += "</body></html>"
-    return output
+    return jsonify(stats())
+
+
+@app.route("/metrics")
+def metrics():
+    return jsonify(stats())
 
 
 def stats():
     conn = get_db()
-    results = conn.execute("SELECT count(*), max(ts_iso8601) FROM metrics;")
+    results = conn.execute(
+        "SELECT metric, max(ts) as ts, count(*) as count, max(ts_iso8601) as ts_iso8601 FROM metrics GROUP BY metric;"
+    )
     return [r for r in results]
 
 
