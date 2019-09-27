@@ -37,9 +37,20 @@ def metrics():
 def stats():
     conn = get_db()
     results = conn.execute(
-        "SELECT metric, max(ts) as ts, count(*) as count, max(ts_iso8601) as ts_iso8601 FROM metrics GROUP BY metric;"
+        """
+        SELECT
+            metric,
+            min(value) as value_min,
+            avg(value) as value_avg,
+            max(value) as value_max,
+            max(ts) as ts,
+            count(*) as count,
+            max(ts_iso8601) as ts_iso8601
+        FROM metrics
+        GROUP BY metric;
+        """
     )
-    return [r for r in results]
+    return [{k: r[k] for k in r.keys()} for r in results]
 
 
 if __name__ == "__main__":
