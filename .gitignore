@@ -1,6 +1,7 @@
 **/.mypy_cache/
 **/__pycache__/
 .venv
+v/
 .env
 *.csv
 *.log
