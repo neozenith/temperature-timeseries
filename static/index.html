@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <link rel="stylesheet" href='/css/style.css' />
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.7.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.3"></script>
+  </head>
+<body>
+<h1>Temperature</h1>
+<div id="vis" style='width: 100%; height: 75%'></div>
+<script type="text/javascript">
+      var yourVlSpec = {
+        $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
+        description: 'A simple bar chart with embedded data.',
+        width: 'container',
+        height: 'container',
+        autosize: {
+          type: 'fit',
+          contains: 'pad',
+          resize: true
+        },
+        data: {
+          url: '/metric/temperature?from=7'
+        },
+        mark: 'line',
+        encoding: {
+          x: {field: 'ts', type: 'temporal', timeunit: 'utcyearmonthdatehoursminutesseconds'},
+          y: {field: 'value', type: 'quantitative'},
+          color: {field: 'metric', type: 'nominal'},
+          tooltip: [
+            {field: 'ts', type: 'temporal', timeunit: 'utcyearmonthdatehoursminutesseconds'},
+            {field: "value", type: "quantitative"},
+            {field: "metric", type: "nominal"}
+          ]
+
+        }
+      };
+      vegaEmbed('#vis', yourVlSpec);
+    </script>
+
+</body>
+</html>
