@@ -8,7 +8,11 @@ from flask import jsonify
 
 log = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='static',
+            template_folder='templates'
+            )
 
 
 def get_db():
@@ -26,7 +30,7 @@ def close_db(e=None):
         db.close()
 
 
-@app.route("/")
+@app.route("/stats")
 def index():
     return jsonify(stats())
 
