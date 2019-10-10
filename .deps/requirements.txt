@@ -1,3 +1,4 @@
+Adafruit_DHT
 flask
 gunicorn
 requests
