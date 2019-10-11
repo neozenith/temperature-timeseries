@@ -22,13 +22,16 @@
         data: {
           url: '/metric/temperature?from=7'
         },
+        transform: [
+          {calculate: '1000*datum.ts', as: 'ts_ms'}
+        ],
         mark: 'line',
         encoding: {
-          x: {field: 'ts', type: 'temporal', timeunit: 'utcyearmonthdatehoursminutesseconds'},
+          x: {field: 'ts_ms', type: 'temporal'},
           y: {field: 'value', type: 'quantitative'},
           color: {field: 'metric', type: 'nominal'},
           tooltip: [
-            {field: 'ts', type: 'temporal', timeunit: 'utcyearmonthdatehoursminutesseconds'},
+            {field: 'ts_ms', type: 'temporal', timeUnit: 'yearmonthdatehoursminutesseconds'},
             {field: "value", type: "quantitative"},
             {field: "metric", type: "nominal"}
           ]
