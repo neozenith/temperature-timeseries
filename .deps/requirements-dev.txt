@@ -1,3 +1,12 @@
 -r ./requirements.txt
 black
 flake8
+pandas
+numpy
+statsmodels
+hmmlearn
+scipy
+jupyter
+jupyterlab
+matplotlib
+itermplot

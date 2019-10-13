@@ -2,12 +2,3 @@ Adafruit_DHT
 flask
 gunicorn
 requests
-pandas
-numpy
-statsmodels
-hmmlearn
-scipy
-jupyter
-jupyterlab
-matplotlib
-itermplot
