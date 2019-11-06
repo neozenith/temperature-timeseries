@@ -25,7 +25,7 @@ def setup_database(filepath):
     conn = sqlite3.connect(filepath)
     with open("schema.sql", "r") as s:
         schema = s.read()
-    conn.execute(schema)
+    conn.executescript(schema)
     conn.commit()
     return conn
 
