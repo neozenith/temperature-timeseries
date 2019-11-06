@@ -81,9 +81,15 @@ def stats(metric=None, start=None, end=None):
         results = conn.execute(
             """
             SELECT
-                id, ts, metric, value
-            FROM metrics
-            WHERE metric = ? AND ts >= ? AND ts <= ?
+                metric, avg(ts) as ts, avg(value) as value
+            FROM
+                (SELECT
+                    round(ts / 300) as ts_g, ts, metric, value
+                FROM metrics
+                WHERE metric = ? AND ts >= ? AND ts <= ?)
+
+            GROUP BY metric, ts_g
+
             ORDER BY ts DESC;
             """,
             [metric, start, end],
@@ -92,9 +98,15 @@ def stats(metric=None, start=None, end=None):
         results = conn.execute(
             """
             SELECT
-                id, ts, metric, value
-            FROM metrics
-            WHERE ts >= ? AND ts <= ?
+                metric, avg(ts) as ts, avg(value) as value
+            FROM
+                (SELECT
+                    round(ts / 300) as ts_g, ts, metric, value
+                FROM metrics
+                WHERE ts >= ? AND ts <= ?)
+
+            GROUP BY metric, ts_g
+
             ORDER BY ts DESC;
             """,
             [start, end],
