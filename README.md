@@ -8,6 +8,12 @@
 . ./start.sh
 ```
 
+Crontab
+
+```bash
+@reboot /home/pi/projects/temperature-timeseries/start.sh 2>&1 >> /home/pi/projects/temperature-timeseries.log
+```
+
 # Data
 
 Data is saved to a SQLite3 database on the RPi using the schema in `schema.sql`
