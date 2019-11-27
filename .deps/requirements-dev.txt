@@ -1,10 +1,9 @@
--r ./requirements.txt
 black
 flake8
+requests
 pandas
 numpy
 statsmodels
-fbprophet
 plotly
 hmmlearn
 scipy
