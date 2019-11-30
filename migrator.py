@@ -26,35 +26,34 @@ def main():
     log.info("Starting up...")
     sqlite_con = sqlite_connection()
     influxdb_con = influxdb_connection()
-    while True:
+    for i in range(1000):
         rows = fetch(sqlite_con)
         log.info(f"Read {len(rows)} rows...")
         if len(rows) == 0:
             sys.exit(0)
 
-        for row in rows:
-            persist_influxdb(influxdb_con, row)
-            mark_as_migrated(sqlite_con, row['id'])
+        ids = persist_influxdb(influxdb_con, rows)
+        mark_as_migrated(sqlite_con, ids)
 
 
 
-def persist_influxdb(conn, data):
-    ts = datetime.datetime.fromtimestamp(data['ts'], tz=datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+def persist_influxdb(conn, rows):
 
-    log.info(f"InfluxDB: {ts} {data}")
     payload = [
         {
             "measurement": data['metric'],
             "tags": {
                 "sensor_id": data['sensor_id'],
             },
-            "time": ts,
+            "time": datetime.datetime.fromtimestamp(data['ts'], tz=datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             "fields": {
                 "value": data['value']
             }
         }
+        for data in rows
     ]
     conn.write_points(payload)
+    return [data['id'] for data in rows]
 
 
 def fetch(conn):
@@ -68,18 +67,18 @@ def fetch(conn):
         WHERE
             migrated IS NULL
         ORDER BY ts DESC
-        LIMIT 100
+        LIMIT 10000
         """,
     )
     return [{k: r[k] for k in r.keys()} for r in results]
 
-def mark_as_migrated(conn, row_id):
-    log.info(f"Mark row as done... {row_id}")
+def mark_as_migrated(conn, ids):
+    log.info(f"Mark {len(ids)} rows marked as done... ")
     now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
     now_ts = now.timestamp()
-    conn.execute(
+    conn.executemany(
         f"""UPDATE metrics SET migrated = ? WHERE id = ?""",
-        (now_ts, row_id),
+        [(now_ts, row_id) for row_id in ids],
     )
     conn.commit()
 
