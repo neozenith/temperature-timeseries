@@ -11,3 +11,4 @@ jupyter
 jupyterlab
 matplotlib
 itermplot
+influxdb
