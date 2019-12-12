@@ -5,6 +5,7 @@
 v/
 .env
 *.csv
+!results.csv
 *.log
 *.sqlite
 *.db
