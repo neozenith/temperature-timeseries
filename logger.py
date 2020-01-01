@@ -29,7 +29,7 @@ def sqlite_connection(filepath="data.db"):
 
 def main():
     log.info("Starting up...")
-    sqlite_con = sqlite_connection()
+    #sqlite_con = sqlite_connection()
     influxdb_con = influxdb_connection()
     while True:
         log.info("read...")
@@ -39,8 +39,8 @@ def main():
             now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
             log.info(f"{now} {temperature}, {humidity}")
 
-            persist_sqlite(sqlite_con, now, "temperature", temperature)
-            persist_sqlite(sqlite_con, now, "humidity", humidity)
+            # persist_sqlite(sqlite_con, now, "temperature", temperature)
+            # persist_sqlite(sqlite_con, now, "humidity", humidity)
             persist_influxdb(influxdb_con, now, "temperature", temperature)
             persist_influxdb(influxdb_con, now, "humidity", humidity)
         else:
